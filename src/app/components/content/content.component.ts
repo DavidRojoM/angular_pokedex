@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core'
 import { PokemonService } from '../../services/pokemon.service'
 import { Results } from '../../models/Results'
 import { Pokemon } from '../../models/Pokemon'
+import { Result } from '../../models/Result'
 
 @Component({
   selector: 'app-content',
@@ -13,8 +14,14 @@ export class ContentComponent implements OnInit {
   count = 0
   dataSize = 25
   dataSizes = [25, 50, 75, 100]
+
+  RESULT: Result = { next: '', previous: '', results: [] }
   POKEMONS: Pokemon[] = []
-  API_URL: string = 'https://pokeapi.co/api/v2/pokemon?limit=100'
+
+  API_URL: string = 'https://pokeapi.co/api/v2/pokemon?limit=2000'
+
+  pokeCount: number = 0
+
   constructor(public pokeService: PokemonService) {}
 
   ngOnInit(): void {
@@ -24,12 +31,11 @@ export class ContentComponent implements OnInit {
   fetchData() {
     this.pokeService.getPokelist(this.API_URL).subscribe(
       (res) => {
-        if (res.next) {
-          this.API_URL = res.next
+        this.RESULT = res
+        for (let i = this.pokeCount; i < this.pokeCount + 100; i++) {
+          this.getPokemon(this.RESULT.results[i])
         }
-        res.results.forEach((poke) => {
-          this.getPokemon(poke)
-        })
+        this.pokeCount += 100
       },
       (err) => {
         console.error(err)
@@ -52,7 +58,7 @@ export class ContentComponent implements OnInit {
     this.page = event
     window.scrollTo(0, 0)
     const lastPage = Math.floor(this.POKEMONS.length / this.dataSize)
-    if (this.page === lastPage) {
+    if (this.page === lastPage && lastPage !== 0) {
       this.fetchData()
     }
   }
@@ -63,9 +69,10 @@ export class ContentComponent implements OnInit {
     const lastPage = 100 / this.dataSize
 
     this.POKEMONS = []
-    this.API_URL = 'https://pokeapi.co/api/v2/pokemon?limit=100'
+    this.pokeCount = 0
     this.fetchData()
 
+    // This just triggers when changing dataSize to 100
     if (this.page === lastPage) {
       this.fetchData()
     }
