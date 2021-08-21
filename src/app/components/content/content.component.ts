@@ -14,6 +14,7 @@ export class ContentComponent implements OnInit {
   dataSize = 25
   dataSizes = [25, 50, 75, 100]
   POKEMONS: Pokemon[] = []
+  API_URL: string = 'https://pokeapi.co/api/v2/pokemon?limit=200'
   constructor(public pokeService: PokemonService) {}
 
   ngOnInit(): void {
@@ -21,8 +22,11 @@ export class ContentComponent implements OnInit {
   }
 
   fetchData() {
-    this.pokeService.getPokelist().subscribe(
+    this.pokeService.getPokelist(this.API_URL).subscribe(
       (res) => {
+        if (res.next) {
+          this.API_URL = res.next
+        }
         res.results.forEach((poke) => {
           this.getPokemon(poke)
         })
@@ -47,12 +51,17 @@ export class ContentComponent implements OnInit {
   onDataChange(event: any) {
     this.page = event
     window.scrollTo(0, 0)
+    const lastPage = Math.floor(this.POKEMONS.length / this.dataSize)
+    if (this.page === lastPage) {
+      this.fetchData()
+    }
   }
 
   onSizeChange(event: any): void {
     this.dataSize = event.target.value
     this.page = 1
     this.POKEMONS = []
+    this.API_URL = 'https://pokeapi.co/api/v2/pokemon?limit=200'
     this.fetchData()
   }
 }
