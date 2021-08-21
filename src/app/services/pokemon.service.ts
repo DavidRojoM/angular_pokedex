@@ -7,8 +7,8 @@ import { Pokemon } from '../models/Pokemon'
   providedIn: 'root'
 })
 export class PokemonService {
-  API_URL = 'https://pokeapi.co/api/v2/pokemon?limit=100'
-  // API_URL = 'https://pokeapi.co/api/v2/pokemon?offset=0&limit=2000'
+  // API_URL = 'https://pokeapi.co/api/v2/pokemon?limit=100'
+  API_URL = 'https://pokeapi.co/api/v2/pokemon?offset=0&limit=2000'
 
   constructor(public http: HttpClient) {}
 

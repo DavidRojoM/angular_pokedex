@@ -8,6 +8,7 @@ import { FooterComponent } from './components/footer/footer.component'
 import { HttpClientModule } from '@angular/common/http'
 import { HeadComponent } from './components/head/head.component'
 import { NgxPaginationModule } from 'ngx-pagination'
+import { FormsModule } from '@angular/forms'
 
 @NgModule({
   declarations: [
@@ -17,7 +18,7 @@ import { NgxPaginationModule } from 'ngx-pagination'
     FooterComponent,
     HeadComponent
   ],
-  imports: [BrowserModule, HttpClientModule, NgxPaginationModule],
+  imports: [BrowserModule, HttpClientModule, NgxPaginationModule, FormsModule],
   providers: [],
   bootstrap: [AppComponent]
 })

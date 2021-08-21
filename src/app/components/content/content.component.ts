@@ -9,15 +9,20 @@ import { Pokemon } from '../../models/Pokemon'
   styleUrls: ['./content.component.css']
 })
 export class ContentComponent implements OnInit {
-  constructor(public pokeService: PokemonService) {}
-  NEXT = ''
-  PREVIOUS = ''
+  page = 1
+  count = 0
+  dataSize = 25
+  dataSizes = [25, 50, 75, 100]
   POKEMONS: Pokemon[] = []
+  constructor(public pokeService: PokemonService) {}
+
   ngOnInit(): void {
+    this.fetchData()
+  }
+
+  fetchData() {
     this.pokeService.getPokelist().subscribe(
       (res) => {
-        this.NEXT = res.next
-        this.PREVIOUS = res.previous
         res.results.forEach((poke) => {
           this.getPokemon(poke)
         })
@@ -37,5 +42,16 @@ export class ContentComponent implements OnInit {
         console.error(err)
       }
     )
+  }
+
+  onDataChange(event: any) {
+    this.page = event
+  }
+
+  onSizeChange(event: any): void {
+    this.dataSize = event.target.value
+    this.page = 1
+    this.POKEMONS = []
+    this.fetchData()
   }
 }
