@@ -10,11 +10,14 @@ import { Pokemon } from '../../models/Pokemon'
 })
 export class ContentComponent implements OnInit {
   constructor(public pokeService: PokemonService) {}
-
+  NEXT = ''
+  PREVIOUS = ''
   POKEMONS: Pokemon[] = []
   ngOnInit(): void {
     this.pokeService.getPokelist().subscribe(
       (res) => {
+        this.NEXT = res.next
+        this.PREVIOUS = res.previous
         res.results.forEach((poke) => {
           this.getPokemon(poke)
         })
