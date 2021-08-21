@@ -9,3 +9,22 @@
 .card {
   max-height: 30rem;
 }
+.bg-purple {
+  background-color: mediumpurple;
+}
+
+.bg-yellow {
+  background-color: yellow;
+}
+
+.bg-brown {
+  background-color: saddlebrown;
+}
+
+.bg-pink {
+  background-color: hotpink;
+}
+
+.bg-reddish {
+  background-color: darkred;
+}

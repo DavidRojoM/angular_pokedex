@@ -123,49 +123,49 @@ export class ContentComponent implements OnInit {
         result = 'bg-success'
         break
       case 'fire':
-        result = 'bg-warning'
+        result = 'bg-reddish'
         break
       case 'grass':
         result = 'bg-success'
         break
       case 'poison':
-        result = 'bg-secondary'
+        result = 'bg-purple'
         break
       case 'flying':
-        result = 'bg-info'
+        result = 'bg-info text-dark'
         break
       case 'normal':
-        result = 'bg-warning'
+        result = 'bg-warning text-dark'
         break
       case 'electric':
-        result = 'bg-warning'
+        result = 'bg-yellow text-dark'
         break
       case 'ground':
-        result = 'bg-warning'
+        result = 'bg-brown'
         break
       case 'psychic':
-        result = 'bg-secondary'
+        result = 'bg-pink'
         break
       case 'fighting':
-        result = 'bg-warning'
+        result = 'bg-warning text-dark'
         break
       case 'fairy':
-        result = 'bg-secondary'
+        result = 'bg-pink'
         break
       case 'steel':
         result = 'bg-light text-dark'
         break
       case 'rock':
-        result = 'bg-warning'
+        result = 'bg-secondary'
         break
       case 'ghost':
         result = 'bg-light text-dark'
         break
       case 'dragon':
-        result = 'bg-warning'
+        result = 'bg-warning text-dark'
         break
       case 'ice':
-        result = 'bg-info'
+        result = 'bg-info text-dark'
         break
       case 'dark':
         result = 'bg-dark'
