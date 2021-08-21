@@ -117,7 +117,7 @@ export class ContentComponent implements OnInit {
     let result = ''
     switch (type) {
       case 'water':
-        result = 'bg-info'
+        result = 'bg-primary'
         break
       case 'bug':
         result = 'bg-success'
