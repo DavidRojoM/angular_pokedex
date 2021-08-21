@@ -15,8 +15,9 @@ export class ContentComponent implements OnInit {
   dataSize = 25
   dataSizes = [25, 50, 75, 100]
 
-  OLDPOKEMONS: Pokemon[] = []
   POKEMONS: Pokemon[] = []
+
+  SEARCHING: boolean = false
 
   API_URL: string = 'https://pokeapi.co/api/v2/pokemon?limit=2000'
 
@@ -62,7 +63,7 @@ export class ContentComponent implements OnInit {
     this.page = event
     window.scrollTo(0, 0)
     const lastPage = Math.ceil(this.POKEMONS.length / this.dataSize)
-    if (this.page === lastPage && lastPage !== 0) {
+    if (this.page === lastPage && lastPage !== 0 && !this.SEARCHING) {
       this.fetchData()
     }
   }
@@ -70,26 +71,31 @@ export class ContentComponent implements OnInit {
   onSizeChange(event: any): void {
     this.dataSize = event.target.value
     this.page = 1
-    const lastPage = Math.floor(100 / this.dataSize)
 
-    this.POKEMONS = []
-    this.pokeCount = 0
-    this.fetchData()
+    if (!this.SEARCHING) {
+      const lastPage = Math.floor(100 / this.dataSize)
 
-    // This just triggers when changing dataSize to 100
-    if (this.page === lastPage) {
+      this.POKEMONS = []
+      this.pokeCount = 0
+
       this.fetchData()
+
+      // This just triggers when changing dataSize to 100
+      if (this.page === lastPage) {
+        this.fetchData()
+      }
     }
   }
 
   search(value: string) {
     this.POKEMONS = []
-    console.log(value)
+
     if (!value) {
-      console.log('uwu')
       this.pokeCount = 0
+      this.SEARCHING = false
       this.fetchData()
     } else {
+      this.SEARCHING = true
       this.fetchComm.RESULT.results.forEach((poke) => {
         if (poke.name.match(value.toLocaleLowerCase())) {
           const url = `https://pokeapi.co/api/v2/pokemon/${poke.name}`
@@ -104,5 +110,6 @@ export class ContentComponent implements OnInit {
         }
       })
     }
+    this.page = 1
   }
 }
