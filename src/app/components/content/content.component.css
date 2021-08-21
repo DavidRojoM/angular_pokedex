@@ -26,3 +26,7 @@
 .bg-reddish {
   background-color: darkred;
 }
+
+.my-pagination /deep/ .ngx-pagination .current {
+  background: #dc3545;
+}

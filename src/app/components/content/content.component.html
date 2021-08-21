@@ -77,9 +77,11 @@
 <div class="container">
   <div class="d-flex justify-content-center">
     <pagination-controls
+      class="my-pagination"
       previousLabel="Prev"
       nextLabel="Next"
       (pageChange)="onDataChange($event)"
+      [autoHide]="true"
     >
     </pagination-controls>
   </div>
