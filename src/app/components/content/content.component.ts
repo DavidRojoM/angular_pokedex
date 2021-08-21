@@ -112,4 +112,64 @@ export class ContentComponent implements OnInit {
     }
     this.page = 1
   }
+
+  getTypeClass(type: string): string {
+    let result = ''
+    switch (type) {
+      case 'water':
+        result = 'bg-info'
+        break
+      case 'bug':
+        result = 'bg-success'
+        break
+      case 'fire':
+        result = 'bg-warning'
+        break
+      case 'grass':
+        result = 'bg-success'
+        break
+      case 'poison':
+        result = 'bg-secondary'
+        break
+      case 'flying':
+        result = 'bg-info'
+        break
+      case 'normal':
+        result = 'bg-warning'
+        break
+      case 'electric':
+        result = 'bg-warning'
+        break
+      case 'ground':
+        result = 'bg-warning'
+        break
+      case 'psychic':
+        result = 'bg-secondary'
+        break
+      case 'fighting':
+        result = 'bg-warning'
+        break
+      case 'fairy':
+        result = 'bg-secondary'
+        break
+      case 'steel':
+        result = 'bg-light text-dark'
+        break
+      case 'rock':
+        result = 'bg-warning'
+        break
+      case 'ghost':
+        result = 'bg-light text-dark'
+        break
+      case 'dragon':
+        result = 'bg-warning'
+        break
+      case 'ice':
+        result = 'bg-info'
+        break
+      case 'dark':
+        result = 'bg-dark'
+    }
+    return result
+  }
 }
