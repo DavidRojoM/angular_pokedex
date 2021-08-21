@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core'
 import { PokemonService } from '../../services/pokemon.service'
 import { Results } from '../../models/Results'
 import { Pokemon } from '../../models/Pokemon'
-import { Result } from '../../models/Result'
+import FetchComm from '../../controllers/FetchComm'
 
 @Component({
   selector: 'app-content',
@@ -15,12 +15,13 @@ export class ContentComponent implements OnInit {
   dataSize = 25
   dataSizes = [25, 50, 75, 100]
 
-  RESULT: Result = { next: '', previous: '', results: [] }
   POKEMONS: Pokemon[] = []
 
   API_URL: string = 'https://pokeapi.co/api/v2/pokemon?limit=2000'
 
   pokeCount: number = 0
+
+  fetchComm: FetchComm = FetchComm.getInstance()
 
   constructor(public pokeService: PokemonService) {}
 
@@ -31,9 +32,11 @@ export class ContentComponent implements OnInit {
   fetchData() {
     this.pokeService.getPokelist(this.API_URL).subscribe(
       (res) => {
-        this.RESULT = res
+        this.fetchComm.RESULT = res
         for (let i = this.pokeCount; i < this.pokeCount + 100; i++) {
-          this.getPokemon(this.RESULT.results[i])
+          if (this.fetchComm.RESULT.results[i]) {
+            this.getPokemon(this.fetchComm.RESULT.results[i])
+          }
         }
         this.pokeCount += 100
       },
@@ -57,7 +60,7 @@ export class ContentComponent implements OnInit {
   onDataChange(event: any) {
     this.page = event
     window.scrollTo(0, 0)
-    const lastPage = Math.floor(this.POKEMONS.length / this.dataSize)
+    const lastPage = Math.ceil(this.POKEMONS.length / this.dataSize)
     if (this.page === lastPage && lastPage !== 0) {
       this.fetchData()
     }
@@ -66,7 +69,7 @@ export class ContentComponent implements OnInit {
   onSizeChange(event: any): void {
     this.dataSize = event.target.value
     this.page = 1
-    const lastPage = 100 / this.dataSize
+    const lastPage = Math.floor(100 / this.dataSize)
 
     this.POKEMONS = []
     this.pokeCount = 0
@@ -76,5 +79,23 @@ export class ContentComponent implements OnInit {
     if (this.page === lastPage) {
       this.fetchData()
     }
+  }
+
+  search(value: string) {
+    this.POKEMONS = []
+    this.fetchComm.RESULT.results.forEach((poke) => {
+      if (poke.name.match(value)) {
+        const url = `https://pokeapi.co/api/v2/pokemon/${poke.name}`
+        this.pokeService.getPokemon(url).subscribe(
+          (res) => {
+            this.POKEMONS.push(res)
+          },
+          (err) => {
+            console.error(err)
+          }
+        )
+        console.log(this.POKEMONS)
+      }
+    })
   }
 }
