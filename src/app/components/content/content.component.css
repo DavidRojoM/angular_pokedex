@@ -1,14 +1,12 @@
 .grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
   gap: 2rem;
   text-align: center;
+  grid-auto-rows: fit-content(100%);
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
   min-height: 100vh;
 }
 
-.card {
-  max-height: 30rem;
-}
 .bg-purple {
   background-color: mediumpurple;
 }

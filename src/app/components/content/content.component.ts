@@ -172,4 +172,8 @@ export class ContentComponent implements OnInit {
     }
     return result
   }
+
+  doSomething(name: string) {
+    alert(`In develpment. ${name}`)
+  }
 }
