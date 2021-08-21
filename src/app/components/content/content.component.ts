@@ -15,6 +15,7 @@ export class ContentComponent implements OnInit {
   dataSize = 25
   dataSizes = [25, 50, 75, 100]
 
+  OLDPOKEMONS: Pokemon[] = []
   POKEMONS: Pokemon[] = []
 
   API_URL: string = 'https://pokeapi.co/api/v2/pokemon?limit=2000'
@@ -83,19 +84,25 @@ export class ContentComponent implements OnInit {
 
   search(value: string) {
     this.POKEMONS = []
-    this.fetchComm.RESULT.results.forEach((poke) => {
-      if (poke.name.match(value)) {
-        const url = `https://pokeapi.co/api/v2/pokemon/${poke.name}`
-        this.pokeService.getPokemon(url).subscribe(
-          (res) => {
-            this.POKEMONS.push(res)
-          },
-          (err) => {
-            console.error(err)
-          }
-        )
-        console.log(this.POKEMONS)
-      }
-    })
+    console.log(value)
+    if (!value) {
+      console.log('uwu')
+      this.pokeCount = 0
+      this.fetchData()
+    } else {
+      this.fetchComm.RESULT.results.forEach((poke) => {
+        if (poke.name.match(value.toLocaleLowerCase())) {
+          const url = `https://pokeapi.co/api/v2/pokemon/${poke.name}`
+          this.pokeService.getPokemon(url).subscribe(
+            (res) => {
+              this.POKEMONS.push(res)
+            },
+            (err) => {
+              console.error(err)
+            }
+          )
+        }
+      })
+    }
   }
 }
