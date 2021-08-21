@@ -46,6 +46,7 @@ export class ContentComponent implements OnInit {
 
   onDataChange(event: any) {
     this.page = event
+    window.scrollTo(0, 0)
   }
 
   onSizeChange(event: any): void {
