@@ -1,1 +1,23 @@
-<div class="grid bg-dark"></div>
+<!--<div class="grid bg-dark"></div>-->
+<table class="table table-dark table-striped text-center">
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>height</th>
+      <th>Picture</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="text-white" *ngFor="let pokemon of POKEMONS">
+      <td>{{ pokemon.name }}</td>
+      <td>{{ pokemon.height }}</td>
+      <td>
+        <img
+          [src]="pokemon.sprites.front_default"
+          [alt]="pokemon.name"
+          loading="lazy"
+        />
+      </td>
+    </tr>
+  </tbody>
+</table>
