@@ -30,3 +30,7 @@
 .my-pagination /deep/ .ngx-pagination .current {
   background: #dc3545;
 }
+.logo {
+  width: 3rem;
+  filter: brightness(0) invert(1);
+}
