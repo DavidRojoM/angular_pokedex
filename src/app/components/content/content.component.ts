@@ -131,7 +131,11 @@ export class ContentComponent implements OnInit {
     return getType(type)
   }
 
-  public doSomething(name: string) {
+  capitalize = function (string: string) {
+    return string.charAt(0).toUpperCase() + string.slice(1)
+  }
+
+  doSomething(name: string) {
     alert(`In development. ${name}`)
   }
 }

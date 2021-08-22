@@ -1,4 +1,4 @@
-<header class="bg-danger">
+<header class="bg-danger sticky-top shadow">
   <div class="container">
     <nav class="navbar navbar-dark">
       <div class="container-fluid">
@@ -49,30 +49,28 @@
               totalItems: count
             }
     "
-    class="card bg-danger text-center"
+    class="card text-center p-1 pokemon"
     [id]="pokemon.name"
+    (click)="doSomething(pokemon.name)"
   >
     <img
       [src]="pokemon.sprites.front_default"
-      class="card-img-top"
+      class="card-img-top img rounded-circle"
       [alt]="pokemon.name"
       loading="lazy"
     />
     <div class="card-body">
-      <h5 class="card-title">{{ pokemon.name }}</h5>
+      <h5 class="card-title">{{ capitalize(pokemon.name) }}</h5>
       <p class="card-text">Height : {{ pokemon.height }}</p>
       <div class="d-flex justify-content-evenly">
         <p
-          class="py-1 px-3 rounded-pill"
+          class="py-1 mx-2 w-100 rounded-pill"
           *ngFor="let type of pokemon.types"
           [ngClass]="getTypeClass(type.type.name)"
         >
           {{ type.type.name }}
         </p>
       </div>
-      <a href="#" class="btn btn-warning" (click)="doSomething(pokemon.name)"
-        >Do something</a
-      >
     </div>
   </div>
 </div>
