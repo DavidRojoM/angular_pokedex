@@ -3,6 +3,7 @@ import { PokemonService } from '../../services/pokemon.service'
 import { Results } from '../../models/Results'
 import { Pokemon } from '../../models/Pokemon'
 import FetchComm from '../../controllers/FetchComm'
+import { getType } from '../../controllers/TypeParser'
 
 @Component({
   selector: 'app-content',
@@ -15,15 +16,17 @@ export class ContentComponent implements OnInit {
   dataSize = 25
   dataSizes = [25, 50, 75, 100]
 
-  POKEMONS: Pokemon[] = []
+  pokemons: Pokemon[] = []
 
-  SEARCHING: boolean = false
+  private itemsToBeFetched = 100
 
-  API_URL: string = 'https://pokeapi.co/api/v2/pokemon?limit=2000'
+  private searching: boolean = false
 
-  pokeCount: number = 0
+  private apiUrl = 'https://pokeapi.co/api/v2/pokemon?limit=2000'
 
-  fetchComm: FetchComm = FetchComm.getInstance()
+  private pokeCount = 0
+
+  private fetchComm = FetchComm.getInstance()
 
   constructor(public pokeService: PokemonService) {}
 
@@ -31,16 +34,20 @@ export class ContentComponent implements OnInit {
     this.fetchData()
   }
 
-  fetchData() {
-    this.pokeService.getPokelist(this.API_URL).subscribe(
+  public fetchData() {
+    this.pokeService.getPokelist(this.apiUrl).subscribe(
       (res) => {
         this.fetchComm.RESULT = res
-        for (let i = this.pokeCount; i < this.pokeCount + 100; i++) {
+        for (
+          let i = this.pokeCount;
+          i < this.pokeCount + this.itemsToBeFetched;
+          i++
+        ) {
           if (this.fetchComm.RESULT.results[i]) {
             this.getPokemon(this.fetchComm.RESULT.results[i])
           }
         }
-        this.pokeCount += 100
+        this.pokeCount += this.itemsToBeFetched
       },
       (err) => {
         console.error(err)
@@ -48,10 +55,10 @@ export class ContentComponent implements OnInit {
     )
   }
 
-  getPokemon(poke: Results) {
+  private getPokemon(poke: Results) {
     this.pokeService.getPokemon(poke.url).subscribe(
       (res) => {
-        this.POKEMONS.push(res)
+        this.pokemons.push(res)
       },
       (err) => {
         console.error(err)
@@ -59,49 +66,41 @@ export class ContentComponent implements OnInit {
     )
   }
 
-  onDataChange(event: any) {
+  public onDataChange(event: any) {
     this.page = event
     window.scrollTo(0, 0)
-    const lastPage = Math.ceil(this.POKEMONS.length / this.dataSize)
-    if (this.page === lastPage && lastPage !== 0 && !this.SEARCHING) {
+    const lastPage = Math.ceil(this.pokemons.length / this.dataSize)
+    if (this.page === lastPage && lastPage !== 0 && !this.searching) {
       this.fetchData()
     }
   }
 
-  onSizeChange(event: any): void {
+  public onSizeChange(event: any): void {
     this.dataSize = event.target.value
     this.page = 1
 
-    if (!this.SEARCHING) {
-      const lastPage = Math.floor(100 / this.dataSize)
-
-      this.POKEMONS = []
+    if (!this.searching) {
+      this.pokemons = []
       this.pokeCount = 0
 
       this.fetchData()
 
-      // This just triggers when changing dataSize to 100
-      if (this.page === lastPage) {
-        this.fetchData()
-      }
+      this.needsToDoubleFetch()
     }
   }
 
-  search(value: string) {
-    this.POKEMONS = []
+  public search(value: string) {
+    this.pokemons = []
 
-    if (!value) {
-      this.pokeCount = 0
-      this.SEARCHING = false
-      this.fetchData()
-    } else {
-      this.SEARCHING = true
+    // triggers when searched value is not ''
+    if (value) {
+      this.searching = true
       this.fetchComm.RESULT.results.forEach((poke) => {
         if (poke.name.match(value.toLocaleLowerCase())) {
           const url = `https://pokeapi.co/api/v2/pokemon/${poke.name}`
           this.pokeService.getPokemon(url).subscribe(
             (res) => {
-              this.POKEMONS.push(res)
+              this.pokemons.push(res)
             },
             (err) => {
               console.error(err)
@@ -109,71 +108,30 @@ export class ContentComponent implements OnInit {
           )
         }
       })
+    } else {
+      this.searching = false
+      this.pokeCount = 0
+
+      this.fetchData()
+      this.needsToDoubleFetch()
     }
     this.page = 1
   }
 
-  getTypeClass(type: string): string {
-    let result = ''
-    switch (type) {
-      case 'water':
-        result = 'bg-primary'
-        break
-      case 'bug':
-        result = 'bg-success'
-        break
-      case 'fire':
-        result = 'bg-reddish'
-        break
-      case 'grass':
-        result = 'bg-success'
-        break
-      case 'poison':
-        result = 'bg-purple'
-        break
-      case 'flying':
-        result = 'bg-info text-dark'
-        break
-      case 'normal':
-        result = 'bg-warning text-dark'
-        break
-      case 'electric':
-        result = 'bg-yellow text-dark'
-        break
-      case 'ground':
-        result = 'bg-brown'
-        break
-      case 'psychic':
-        result = 'bg-pink'
-        break
-      case 'fighting':
-        result = 'bg-warning text-dark'
-        break
-      case 'fairy':
-        result = 'bg-pink'
-        break
-      case 'steel':
-        result = 'bg-light text-dark'
-        break
-      case 'rock':
-        result = 'bg-secondary'
-        break
-      case 'ghost':
-        result = 'bg-light text-dark'
-        break
-      case 'dragon':
-        result = 'bg-warning text-dark'
-        break
-      case 'ice':
-        result = 'bg-info text-dark'
-        break
-      case 'dark':
-        result = 'bg-dark'
+  // This just triggers when changing dataSize to 100
+  private needsToDoubleFetch() {
+    const lastPage = Math.floor(100 / this.dataSize)
+
+    if (this.page === lastPage) {
+      this.fetchData()
     }
-    return result
   }
 
-  doSomething(name: string) {
-    alert(`In develpment. ${name}`)
+  public getTypeClass(type: string): string {
+    return getType(type)
+  }
+
+  public doSomething(name: string) {
+    alert(`In development. ${name}`)
   }
 }
